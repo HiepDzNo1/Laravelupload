@@ -33,8 +33,11 @@ Route::get('/admin/home',[LoginController::class,'admin_home'])->name("adminHome
             Route::get('list',[LopController::class,'list'])->name("listClass");
             Route::get('edit/{lop}',[LopController::class,'edit']);
             Route::post('edit/{lop}',[LopController::class,'postedit']);
-            Route::DELETE('delete',[LopController::class,'delete']);
-            Route::get('/lop', [LopController::class, 'sapxep'])->name('sinhvien.sapxep');
+            Route::DELETE('delete/{lop}',[LopController::class,'delete'])->name("deleteClass");
+            //tìm kiếm
+            Route::get('/searchFullText', 'App\Http\Controllers\admin\LopController@searchFullText')->name('searchFullText');
+            //sắp xếp
+            Route::get('/sapXep', 'App\Http\Controllers\admin\LopController@sapXep')->name('sapXep');
         });
     });
 // });

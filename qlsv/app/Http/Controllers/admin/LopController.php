@@ -59,18 +59,54 @@ class LopController extends Controller
 
         ]);
     }
-    public function sapxep(Request $request)
-{
-    $sinhviens = DB::table('lops');
 
-    if ($request->has('sort') && $request->sort == 'malop') {
-        $sinhviens->orderBy('malop');
+//tim kiem
+    public function searchFullText(Request $request) {
+        if(empty($request->typeSearch)) {
+            return redirect()->route("listClass");
+        } else {
+            if($request->typeSearch == 'tenlop'){
+                $data = DB::table('lops')->where('tenlop', 'LIKE', "%{$request->textSearch}%")->paginate(1);
+                return view('admin.lop.list',[
+                    'title'=>'Tìm kiếm theo tên',
+                    'lops'=>$data
+                ]);
+            } else if($request->typeSearch == 'malop'){
+                $data = DB::table('lops')->where('malop', '=', $request->textSearch)->paginate(1);
+                return view('admin.lop.list',[
+                    'title'=>'Tìm kiếm theo mã',
+                    'lops'=>$data
+                ]);
+            } else {
+                return redirect()->route("listClass");
+            }
+        }
     }
 
-    $sinhviens = $sinhviens->get();
 
-    return view(
-        'list', compact('sinhviens')
-    );
-}
+    //sap xep
+    public function sapXep(Request $request) {
+        if(empty($request->typeSapXep)) {
+            return redirect()->route("listClass");
+        }else {
+            if($request->typeSapXep == "malop"){
+                $lops = DB::table('lops')->orderBy('malop','desc')->paginate(3);
+                return view('admin.lop.list',[
+                    'title'=>'Danh sách lớp học sắp xêp',
+                    'lops'=>$lops
+                ]);
+            }
+            else if($request->typeSapXep == "tenlop"){
+                $lops = DB::table('lops')->orderBy('tenlop','asc')->paginate(3);
+                return view('admin.lop.list',[
+                    'title'=>'Danh sách lớp học sắp xêp',
+                    'lops'=>$lops
+                ]);
+            }
+        }
+
+    }
+
+
+
 }
